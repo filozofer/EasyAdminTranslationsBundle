@@ -1,5 +1,5 @@
 {
-  "name": "filozofer/EasyAdminTranslationsBundle",
+  "name": "filozofer/easyadmin-translations-bundle",
   "type": "symfony-bundle",
   "description": "EasyAdmin unofficial translations system for Symfony applications",
   "keywords": ["backend", "admin", "translation", "language", "multi-languages"],
