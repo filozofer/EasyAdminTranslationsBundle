@@ -1,0 +1,19 @@
+
+# List of bundle services
+
+services:
+
+    easyadmintranslations.translations_component_type:
+        class: EasyAdminTranslationsBundle\Form\TranslationsComponentType
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: form.type, alias: eatb_translations_component }
+
+    easyadmintranslations.flash_message_listerner:
+        class: EasyAdminTranslationsBundle\Listener\FlashMessageListener
+        arguments:
+            translator: "@translator"
+            session: "@session"
+        tags:
+            - { name: kernel.event_subscriber }

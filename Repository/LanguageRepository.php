@@ -1,6 +1,6 @@
 <?php
 
-namespace SBWA\Inter\ApiBundle\Repository;
+namespace EasyAdminTranslationsBundle\Repository;
 
 use \Doctrine\ORM\EntityRepository as DoctrineRepository;
 

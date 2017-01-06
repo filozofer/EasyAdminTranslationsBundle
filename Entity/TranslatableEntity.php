@@ -127,18 +127,11 @@ abstract class TranslatableEntity extends Translatable implements JsonSerializab
     }
 
     /**
-     * Get the translations list as an html list of the flags languages
-     * @return string html
+     * Default toString function for TranslatableEntity
+     * @return string
      */
-    public function getTranslationsFlagList() {
-
-        $html = '<ul class="translations-flags-list">';
-        foreach ($this->translations as $translation) {
-            $language = $translation->getLanguage();
-            $html .= '<li class="' . $language->getIsoKey() . '"><img src="' . $language->getFlag() . '" alt="' . $language->getTitle() . '" /></li>';
-        }
-        $html .= '</ul>';
-        return $html;
+    public function __toString() {
+        return $this->getTechnicalTitle();
     }
 
     /**

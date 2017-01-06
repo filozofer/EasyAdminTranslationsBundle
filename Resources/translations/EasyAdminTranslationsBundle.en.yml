@@ -1,0 +1,16 @@
+
+# Close tab modal
+close_tab_modal:
+    body_message: Are you sure ?
+    close_button: Close
+
+# Field translations component
+field_translations_component:
+    language_column: Language
+    action_column: Action
+    current_page: Current page
+
+# Flashs messages
+flash_messages:
+    persist_entity: Your entity has been persist succesfully !
+    update_entity: Your entity has been updated succesfully !

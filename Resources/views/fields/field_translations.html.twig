@@ -1,0 +1,24 @@
+
+{# Translations field view #}
+<ul class="eatb_field_translations">
+
+    {# Verify if value is an array #}
+    {% if value is iterable %}
+
+        {# For each translation #}
+        {% for translation in value %}
+            {% if translation.language %}
+
+                {# Display a flag with edit translation path #}
+                <li class="{{ translation.language.isoKey }}">
+                    {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: field_options.targetEntity|split('\\')|last, id: translation.id })) %}
+                    <a href="{{ action_edit_href }}">
+                        <img src="{{ vich_uploader_asset(translation.language, 'flagFile') }}" alt="{{ translation.language.title }}" />
+                    </a>
+                </li>
+
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+</ul>

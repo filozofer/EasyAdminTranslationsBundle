@@ -1,0 +1,110 @@
+
+/**
+ * Stylesheet file for EasyAdmin Translations Bundle
+ */
+
+/**
+ * Field translations for list page
+ */
+
+ul.eatb_field_translations {
+    margin: 0px;
+    list-style-type: none;
+    line-height: 29px;
+}
+ul.eatb_field_translations li {
+    display: inline-block;
+    width: 20px;
+    height: 15px;
+    margin-right: 5px;
+}
+ul.eatb_field_translations li img {
+    vertical-align: inherit;
+}
+
+/**
+ * Translation widget component
+ */
+
+.eatb_translations_component_widget td {
+    padding: 5px;
+}
+.eatb_translations_component_widget .label_language_column .language_title {
+    margin-right: 7px;
+}
+.eatb_translations_component_widget .label_language_column .flag {
+    float: right;
+}
+.eatb_translations_component_widget .actions_column {
+    text-align: center;
+}
+.eatb_translations_component_widget .actions_column img {
+    height: 25px;
+}
+
+/**
+ * Translations tabs component
+ */
+
+.field-eatb_translations_tabs.no-tabs {
+    display: none;
+}
+
+.field-eatb_translations_tabs .tab-headers .tab-header {
+    position: relative;
+    display: inline-block;
+    margin-right: 4px;
+    padding: 15px;
+    border: 1px solid #333;
+    border-bottom: 0px;
+    border-radius: 2px 2px 0px 0px;
+    background-color: #F5F5F5;
+    cursor: pointer;
+}
+
+.field-eatb_translations_tabs .tab-headers .tab-header .language_title {
+    margin-right: 7px;
+}
+.field-eatb_translations_tabs .tab-headers .tab-header .flag {
+    float: right;
+}
+
+.field-eatb_translations_tabs .tab-headers .tab-header.current {
+    top: 1px;
+}
+
+.field-eatb_translations_tabs .tab-headers .tab-header .close-button {
+    display: none;
+}
+.field-eatb_translations_tabs .tab-headers .tab-header:hover .close-button {
+    position: absolute;
+    right: -11px;
+    top: -10px;
+    z-index: 1;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../images/icon_close_tab.png);
+    background-size: 20px;
+}
+
+.field-eatb_translations_tabs .tab-contents {
+    padding-top: 10px;
+    border: 1px solid #333;
+}
+
+.field-eatb_translations_tabs .tab-contents .tab-content iframe {
+    display: none;
+    width: 100%;
+    border: none;
+}
+
+/**
+ * Hide Easyadmin menus for iframe view mode
+ */
+body.hideEasyadminMenu header.main-header, body.hideEasyadminMenu aside.main-sidebar {
+    display: none;
+}
+body.hideEasyadminMenu div.content-wrapper {
+    margin-left: 0px;
+}

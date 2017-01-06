@@ -1,0 +1,15 @@
+
+/**
+ * Hide easyadmin menus if there is a hideMenu request param with true value
+ */
+
+{% if hideMenu %}
+    header.main-header, aside.main-sidebar {
+        display: none;
+    }
+    div.content-wrapper {
+        margin-left: 0px;
+    }
+{% else %}
+    // Nothing to hide, set hideMenu to true as request parameter to hide easyadmin menus
+{% endif %}

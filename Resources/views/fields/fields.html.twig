@@ -1,0 +1,181 @@
+
+{###########
+ # Widgets #
+ ###########}
+
+{# Translations Component Widget #}
+{% block eatb_translations_component_widget %}
+    <div class="eatb_translations_component_widget">
+
+        {# Translation entity #}
+        {% set translationEntityClassName = (current_translation is defined) ? '' : easyadmin.entity.properties.translations.targetEntity|split('\\')|last %}
+
+        {# Display each translation status #}
+        <table class="fields_translations_component">
+            <tr>
+                <th>{{ 'field_translations_component.language_column'|trans({}, 'EasyAdminTranslationsBundle') }}</th>
+                <th>{{ 'field_translations_component.action_column'|trans({}, 'EasyAdminTranslationsBundle') }}</th>
+            </tr>
+            {% if current_translation is defined %}
+                <tr>
+                    <td class="label_language_column">Parent</td>
+                    <td class="actions_column">
+                        {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: translationEntityClassName, id: current_translation.parent.id })) %}
+                        <a href="{{ action_edit_href }}">
+                            <img src="{{ asset('bundles/easyadmintranslations/images/icon_edit.png') }}" alt="{{ 'Edit'|trans }}" />
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% for translation in translations %}
+                <tr>
+                    <td class="label_language_column">
+                        <span class="language_title">{{ translation.language.title }}</span>
+                        <img class="flag" src="{{ vich_uploader_asset(translation.language, 'flagFile') }}" alt="{{ translation.language.title }}" />
+                    </td>
+                    <td class="actions_column">
+                        {# Translation exist ? #}
+                        {% if translation.translation.id %}
+                            {% if(current_translation is defined and current_translation.language.isoKey == translation.translation.language.isoKey) %}
+                            {{ 'field_translations_component.current_page'|trans({}, 'EasyAdminTranslationsBundle') }}
+                            {% else %}
+                                {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true' })) %}
+                                <a class="translation_action edit"  href="{{ action_edit_href }}" language="{{ translation.translation.language.isoKey }}">
+                                    <img src="{{ asset('bundles/easyadmintranslations/images/icon_edit.png') }}" alt="{{ 'Edit'|trans }}" />
+                                </a>
+                            {% endif %}
+                        {# New Translation #}
+                        {% else %}
+                            {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'new', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true' })) %}
+                            <a class="translation_action new" href="{{ action_edit_href }}">
+                                <img src="{{ asset('bundles/easyadmintranslations/images/icon_new.png') }}" alt="{{ 'New'|trans }}" />
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+    <script type="text/javascript">
+
+        /**
+         * Translations Component widget javascript
+         */
+        (function($) {$(document).ready(function() {
+
+            // Translations strings
+            var translations = {
+                'close_tab_modal.body_message' : '{{ 'close_tab_modal.body_message'|trans({}, 'EasyAdminTranslationsBundle') }}',
+                'close_tab_modal.close_button' : '{{ 'close_tab_modal.close_button'|trans({}, 'EasyAdminTranslationsBundle') }}'
+            };
+
+            /**
+             * Handle translations action (edit or add translation)
+             */
+            $('.field-eatb_translations_component .translation_action').on('click', function(e){
+                e.preventDefault();
+
+                // Get current iso key corresponding to clicked action
+                var isoKeyLanguage = $(this).attr('language');
+
+                // Verify if translations tabs component exist and create it otherwise
+                if($('div.field-eatb_translations_tabs').length === 0) {
+                    $tabsComponent = $('<div>').addClass('field-eatb_translations_tabs');
+                    $tabsHeaders = $('<div>').addClass('tab-headers');
+                    $tabsComponent.append($tabsHeaders);
+                    $tabsContents = $('<div>').addClass('tab-contents');
+                    $tabsComponent.append($tabsContents);
+                    $(this).parents('form').parent().append($tabsComponent);
+                }
+
+                // Verify if tabs for this language already exist and set focus to this tab otherwise
+                if($('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).length > 0) {
+                    $('div.field-eatb_translations_tabs .tab-headers .tab-header').removeClass('current');
+                    $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).addClass('current');
+                    $('div.field-eatb_translations_tabs .tab-contents .tab-content:visible').hide();
+                    $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).show();
+                    return;
+                }
+
+                // Create tab for this language with iframe to the edit or new page
+                var $newTabHeader = $('<div>').addClass('tab-header').addClass(isoKeyLanguage).attr('language', isoKeyLanguage).html($(this).parents('tr').find('.label_language_column').html());
+                var $closeTabButton = $('<span>').addClass('close-button');
+                $newTabHeader.append($closeTabButton);
+                $('div.field-eatb_translations_tabs .tab-headers').append($newTabHeader);
+                var $iframe = $('<iframe>').attr('src', $(this).attr('href'));
+                var $newTabContent = $('<div>').addClass('tab-content').addClass(isoKeyLanguage).html($iframe);
+                $iframe.on('load', function(){
+                    $(this).show();
+                });
+                $('div.field-eatb_translations_tabs .tab-contents').append($newTabContent);
+                $('div.field-eatb_translations_tabs').removeClass('no-tabs');
+
+                // Set focus to new tab
+                $('div.field-eatb_translations_tabs .tab-headers .tab-header').removeClass('current');
+                $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).addClass('current');
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content:visible').hide();
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage + ' iframe').css('height', $(window).height());
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).show();
+
+            });
+
+            /**
+             * Change selected tab system
+             */
+            $('body').on('click', '.field-eatb_translations_tabs .tab-header', function(){
+
+                // Get current iso key corresponding to clicked action
+                var isoKeyLanguage = $(this).attr('language');
+
+                // Set focus to new tab
+                $('div.field-eatb_translations_tabs .tab-headers .tab-header').removeClass('current');
+                $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).addClass('current');
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content:visible').hide();
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).show();
+
+            });
+
+            /**
+             * Close tab system
+             * Note: Sorry to attach this event on body but I can't figure out an another solution which will work for every future user of this bundle
+             */
+            $('body').on('click', '.field-eatb_translations_tabs .tab-header .close-button', function(e){
+                e.stopPropagation();
+                var $closeButton = $(this);
+
+                // Create modal from a clone of easyadmin modal-delete
+                var modalCloseTab = $('#modal-delete').clone().removeAttr('id').addClass('close-tab-modal');
+                modalCloseTab.find('.modal-body').html('<h4>' + translations['close_tab_modal.body_message'] + '</h4>');
+                modalCloseTab.find('.modal-footer #modal-delete-button').removeClass('btn-danger').removeAttr('modal-delete-button').addClass('close-tab').text(translations['close_tab_modal.close_button'])
+
+                // Open modal & close tab if user confirm it
+                modalCloseTab.modal({ backdrop: true, keyboard: true }).on('click', '.close-tab', function () {
+
+                    // Get iso key for tab to close
+                    var isoKeyLanguage = $closeButton.parents('.tab-header').attr('language');
+
+                    // Remove tab header & remove tab content
+                    var wasCurrentTab = $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).hasClass('current');
+                    $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).remove();
+                    $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).remove();
+
+                    // Select another tab if this was the current selected tab
+                    if(wasCurrentTab === true) {
+                        $('div.field-eatb_translations_tabs .tab-headers .tab-header').eq(0).trigger('click');
+                    }
+
+                    // Hide or not component if there is no tab to display
+                    if($('div.field-eatb_translations_tabs .tab-headers .tab-header').length === 0) {
+                        $('div.field-eatb_translations_tabs').addClass('no-tabs');
+                    }
+
+                });
+
+            });
+
+        });})(jQuery);
+
+    </script>
+{% endblock %}

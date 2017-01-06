@@ -66,16 +66,11 @@ class Language extends Translatable
     protected $flag;
 
     /**
-     * Language constructor like
-     * @param int $id
-     * @param string $title
-     * @param string $isoKey
+     * Convert Language object to string
+     * @return string
      */
-    public function fill($id, $title, $isoKey)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->isoKey = $isoKey;
+    public function __toString() {
+        return $this->getTitle();
     }
 
     /**

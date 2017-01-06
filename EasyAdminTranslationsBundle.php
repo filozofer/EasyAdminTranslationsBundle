@@ -11,12 +11,14 @@
 
 namespace EasyAdminTranslationsBundle;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use EasyAdminTranslationsBundle\DependencyInjection\Compiler\EasyAdminTranslationsTwigPaths;
 
 /**
  * @author Maxime Tual <maxime.tual@gmail.com>
  */
-class EasyAdminBundle extends Bundle
+class EasyAdminTranslationsBundle extends Bundle
 {
     const VERSION = '0.0.1';
 }
