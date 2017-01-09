@@ -14,3 +14,5 @@ field_translations_component:
 flash_messages:
     persist_entity: Your entity has been persist succesfully !
     update_entity: Your entity has been updated succesfully !
+    persist_translation: Your translation has been persist succesfully !
+    update_translation: Your translation has been updated succesfully !

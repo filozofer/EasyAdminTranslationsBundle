@@ -39,7 +39,12 @@ class FlashMessageListener implements EventSubscriberInterface
      */
     public function flashMessageForPersist(GenericEvent $event)
     {
-        $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.persist_entity', [], 'EasyAdminTranslationsBundle'));
+        if(is_subclass_of($event->getSubject(), 'EasyAdminTranslationsBundle\Entity\Translation')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.persist_translation', [], 'EasyAdminTranslationsBundle'));
+        }
+        else if(is_subclass_of($event->getSubject(), 'EasyAdminTranslationsBundle\Entity\TranslatableEntity')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.persist_entity', [], 'EasyAdminTranslationsBundle'));
+        }
     }
 
     /**
@@ -48,6 +53,11 @@ class FlashMessageListener implements EventSubscriberInterface
      */
     public function flashMessageForUpdate(GenericEvent $event)
     {
-        $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.update_entity', [], 'EasyAdminTranslationsBundle'));
+        if(is_subclass_of($event->getSubject(), 'EasyAdminTranslationsBundle\Entity\Translation')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.update_translation', [], 'EasyAdminTranslationsBundle'));
+        }
+        else if(is_subclass_of($event->getSubject(), 'EasyAdminTranslationsBundle\Entity\TranslatableEntity')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.update_entity', [], 'EasyAdminTranslationsBundle'));
+        }
     }
 }
