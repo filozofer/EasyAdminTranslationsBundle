@@ -11,7 +11,7 @@
 
                 {# Display a flag with edit translation path #}
                 <li class="{{ translation.language.isoKey }}">
-                    {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: field_options.targetEntity|split('\\')|last, id: translation.id })) %}
+                    {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: field_options.sourceEntity|split('\\')|last, id: translation.parent.id, translation: translation.language.isoKey })) %}
                     <a href="{{ action_edit_href }}">
                         <img src="{{ vich_uploader_asset(translation.language, 'flagFile') }}" alt="{{ translation.language.title }}" />
                     </a>

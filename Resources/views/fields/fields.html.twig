@@ -74,7 +74,7 @@
             /**
              * Handle translations action (edit or add translation)
              */
-            $('.field-eatb_translations_component .translation_action').on('click', function(e){
+            $('.field-eatb_translations_component .translation_action').on('click', function(e, scrollToTab){
                 e.preventDefault();
 
                 // Get current iso key corresponding to clicked action
@@ -107,7 +107,14 @@
                 var $iframe = $('<iframe>').attr('src', $(this).attr('href'));
                 var $newTabContent = $('<div>').addClass('tab-content').addClass(isoKeyLanguage).html($iframe);
                 $iframe.on('load', function(){
+
+                    // Show iframe now it's ready
                     $(this).show();
+
+                    // Scroll to tab ?
+                    if(scrollToTab) {
+                        $('html, body').animate({ scrollTop: $('.field-eatb_translations_tabs').first().offset().top }, 'slow');
+                    }
                 });
                 $('div.field-eatb_translations_tabs .tab-contents').append($newTabContent);
                 $('div.field-eatb_translations_tabs').removeClass('no-tabs');
@@ -174,6 +181,34 @@
                 });
 
             });
+
+            /**
+             * Open languages base on url param
+             */
+            if($_GET('translation') != null) {
+
+                // Open corresponding translation tab
+                $('.field-eatb_translations_component .translation_action[language=' + $_GET('translation') + ']').trigger('click', [true]);
+
+            }
+
+            /**
+             * Get query parameter
+             * @param name
+             * @param url
+             * @returns {*}
+             */
+            function $_GET(name, url) {
+                if (!url) {
+                    url = window.location.href;
+                }
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
 
         });})(jQuery);
 
