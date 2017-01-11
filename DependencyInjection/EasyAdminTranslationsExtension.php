@@ -29,6 +29,7 @@ class EasyAdminTranslationsExtension extends Extension
         $easyAdminConfig['design']['assets']['css'][] = 'bundles/easyadmintranslations/stylesheets/easyadmintranslations-all.css';
         $easyAdminConfig['design']['assets']['css'][] = 'eatb/api/hide-easyadmin-menu-in-iframe.css';
         $easyAdminConfig['design']['assets']['js'][]  = 'bundles/easyadmintranslations/javascripts/iframe-form-redirect-to-edit-form.js';
+        $easyAdminConfig['design']['assets']['js'][]  = 'bundles/easyadmintranslations/javascripts/send-event-back-to-parent.js';
         $easyAdminConfig['design']['form_theme'][] = '@EasyAdminTranslations/fields/fields.html.twig';
 
         // Set new altered configurations

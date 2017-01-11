@@ -10,21 +10,22 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class Translation extends Translatable
 {
     /**
-     * Property to override in child object if you use annotation on this property
-     * @var mixed Parent
+     * Property to override in child object to use annotation on this property
+     * @var TranslatableEntity
      */
     protected $parent;
 
     /**
+     * Language of this translation
      * @var Language
      *
-     * @ORM\ManyToOne(targetEntity="EasyAdminTranslationsBundle\Entity\Language", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="EasyAdminTranslationsBundle\Entity\Language")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id", nullable=false)
      */
     protected $language;
 
     /**
-     * @return Question
+     * @return TranslatableEntity
      */
     public function getParent()
     {
@@ -32,11 +33,14 @@ abstract class Translation extends Translatable
     }
 
     /**
-     * @param Question $parent
+     * @param TranslatableEntity|int $parent
+     * @return Translation
      */
     public function setParent($parent)
     {
+        if(!is_subclass_of($parent, 'EasyAdminTranslationsBundle\Entity\TranslatableEntity') && !is_numeric($parent)) { return $this; }
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -53,6 +57,7 @@ abstract class Translation extends Translatable
      */
     public function setLanguage($language)
     {
+        if(!is_a($language, 'EasyAdminTranslationsBundle\Entity\Language') && !is_numeric($language)) { return $this; }
         $this->language = $language;
         return $this;
     }

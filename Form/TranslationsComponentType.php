@@ -63,8 +63,9 @@ class TranslationsComponentType extends AbstractType
             ];
         }
 
-        // Pass translations to view
+        // Pass translations & current entity to view
         $view->vars['translations'] = $translationsStatus;
+        $view->vars['current_entity'] = $currentEntity;
 
         // Call parent finish view
         parent::finishView($view, $form, $options);

@@ -46,8 +46,9 @@
                             {% endif %}
                         {# New Translation #}
                         {% else %}
-                            {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'new', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true' })) %}
-                            <a class="translation_action new" href="{{ action_edit_href }}">
+                            {% set refererToFutureEditPage = path('redirect-to-translation', { entityName: translationEntityClassName, parentId: current_entity.id, languageId: translation.translation.language.id})|url_encode %}
+                            {% set action_new_href = path('easyadmin', request_parameters|default({})|merge({ action: 'new', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true', language_id: translation.translation.language.id, parent_id: current_entity.id, referer: refererToFutureEditPage })) %}
+                            <a class="translation_action new" href="{{ action_new_href }}" language="{{ translation.translation.language.isoKey }}">
                                 <img src="{{ asset('bundles/easyadmintranslations/images/icon_new.png') }}" alt="{{ 'New'|trans }}" />
                             </a>
                         {% endif %}
@@ -55,6 +56,12 @@
                 </tr>
             {% endfor %}
         </table>
+
+        {# DOM Templates use in javascript #}
+        <div id="eatb_templates" style="display: none;">
+            <img template-name="icon_edit" src="{{ asset('bundles/easyadmintranslations/images/icon_edit.png') }}" alt="{{ 'Edit'|trans }}" />
+            <img template-name="icon_new" src="{{ asset('bundles/easyadmintranslations/images/icon_new.png') }}" alt="{{ 'New'|trans }}" />
+        </div>
 
     </div>
 
@@ -191,6 +198,39 @@
                 $('.field-eatb_translations_component .translation_action[language=' + $_GET('translation') + ']').trigger('click', [true]);
 
             }
+
+            /**
+             * Listen for action from child iframe
+             */
+            $(window).on('message', function(e){
+
+                // Get event which has been receive from iframe
+                var event = e.originalEvent.data;
+
+                // Action handler
+                switch(event.action) {
+
+                    // A new translation has been created
+                    case 'new':
+
+                        // Action link for language
+                        var $actionLink = $('.field-eatb_translations_component .translation_action[language' + event.language + ']');
+
+                        // Edit action image
+                        var $editIcon = $('#eatb_templates img[template-name=icon_edit]').clone();
+
+                        // Change action link for this language
+                        $actionLink.html($editIcon).removeClass('new').addClass('edit').attr('href', event.action_url);
+
+                        break;
+
+                    // A translation has been deleted
+                    case 'delete':
+                        break;
+
+                    default: return;
+                }
+            });
 
             /**
              * Get query parameter

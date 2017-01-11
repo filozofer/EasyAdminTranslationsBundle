@@ -5,10 +5,10 @@
 
     // Get informations about actual page & request
     var weAreInIframe = window.self !== window.top;
-    var weAreInNewOrEditPage = ($_GET('action') == 'edit' || $_GET('action') == 'new') && ($_GET('entity') != ''); // Far from perfect !
+    var weAreInEditPage = ($_GET('action') == 'edit' && $_GET('entity') != ''); // Far from perfect !
 
     // Verify if we are in iframe on a new or edit page
-    if(weAreInIframe && weAreInNewOrEditPage) {
+    if(weAreInIframe && weAreInEditPage) {
 
         // Build action url
         var actionUrl = (window.location.href.indexOf('&referer=') === -1 || window.location.href.indexOf('?referer=') === -1) ? window.location.href + '&referer=REPLACETHIS&updated_referer' : window.location.href;

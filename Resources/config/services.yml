@@ -17,3 +17,11 @@ services:
             session: "@session"
         tags:
             - { name: kernel.event_subscriber }
+
+    easyadmintranslations.translation_entity_creation_listener:
+        class: EasyAdminTranslationsBundle\Listener\TranslationEntityCreationListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            configManager: "@easyadmin.config.manager"
+        tags:
+            - { name: kernel.event_subscriber }
