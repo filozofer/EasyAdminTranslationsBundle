@@ -5,7 +5,7 @@
 (function($) {$(document).ready(function() {
 
     // Verify if params exist
-    if($_GET('sendToParent') !== '') {
+    if($_GET('sendToParent') != null) {
 
         // Send event information to parent
         parent.postMessage(JSON.parse($_GET('sendToParent')), '*');

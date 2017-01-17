@@ -1,0 +1,23 @@
+
+{# Page content #}
+<div class="close-tab-content" style="width: 100%; height: 100%; background-color: #F5F5F5;">
+
+    {# Display flash message #}
+    {% include '@EasyAdmin/default/flash_messages.html.twig' %}
+
+    {# EasyAdmin CSS (include boostrap) #}
+    <link rel="stylesheet" href="{{ asset('bundles/easyadmin/stylesheet/easyadmin-all.min.css') }}">
+
+</div>
+
+{# Send event to parent to allow him to close the corresponding tab #}
+<script type="text/javascript">
+
+    // Send event information to parent to close the corresponding tab
+    parent.postMessage({
+        'action': 'delete',
+        'language': '{{ language }}',
+        'action_url': '{{ action_url|url_encode }}'
+    }, '*');
+
+</script>

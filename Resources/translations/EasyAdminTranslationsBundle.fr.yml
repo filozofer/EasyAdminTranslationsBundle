@@ -14,5 +14,7 @@ field_translations_component:
 flash_messages:
     persist_entity: Votre entité à été créée avec succès !
     update_entity: Votre entité à été mise à jour avec succès !
+    delete_entity: Votre entité à été supprimé avec succès !
     persist_translation: Votre traduction à été créée avec succès !
     update_translation: Votre traduction à été mise à jour avec succès !
+    delete_translation: Votre traduction à été supprimé avec succès !

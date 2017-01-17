@@ -30,6 +30,7 @@ class FlashMessageListener implements EventSubscriberInterface
         return [
             EasyAdminEvents::POST_PERSIST => ['flashMessageForPersist'],
             EasyAdminEvents::POST_UPDATE  => ['flashMessageForUpdate'],
+            EasyAdminEvents::POST_DELETE  => ['flashMessageForDelete']
         ];
     }
 
@@ -58,6 +59,20 @@ class FlashMessageListener implements EventSubscriberInterface
         }
         else if(is_subclass_of($event->getSubject(), 'EasyAdminTranslationsBundle\Entity\TranslatableEntity')) {
             $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.update_entity', [], 'EasyAdminTranslationsBundle'));
+        }
+    }
+
+    /**
+     * Flash message when entity his deleted
+     * @param GenericEvent $event
+     */
+    public function flashMessageForDelete(GenericEvent $event)
+    {
+        if(is_subclass_of($event->getSubject()['class'], 'EasyAdminTranslationsBundle\Entity\Translation')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.delete_translation', [], 'EasyAdminTranslationsBundle'));
+        }
+        else if(is_subclass_of($event->getSubject()['class'], 'EasyAdminTranslationsBundle\Entity\TranslatableEntity')) {
+            $this->session->getFlashBag()->add('success', $this->translator->trans('flash_messages.delete_entity', [], 'EasyAdminTranslationsBundle'));
         }
     }
 }

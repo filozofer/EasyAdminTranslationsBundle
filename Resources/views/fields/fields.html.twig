@@ -39,15 +39,16 @@
                             {% if(current_translation is defined and current_translation.language.isoKey == translation.translation.language.isoKey) %}
                             {{ 'field_translations_component.current_page'|trans({}, 'EasyAdminTranslationsBundle') }}
                             {% else %}
-                                {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true' })) %}
+                                {% set refererToCloseTab = path('eatb-close-tab', request_parameters|default({})|merge({'entityName': translationEntityClassName, 'parentId' : current_entity.id, 'languageId': translation.translation.language.id, 'hideMenu': 'true'})) %}
+                                {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true', 'referer': refererToCloseTab })) %}
                                 <a class="translation_action edit"  href="{{ action_edit_href }}" language="{{ translation.translation.language.isoKey }}">
                                     <img src="{{ asset('bundles/easyadmintranslations/images/icon_edit.png') }}" alt="{{ 'Edit'|trans }}" />
                                 </a>
                             {% endif %}
                         {# New Translation #}
                         {% else %}
-                            {% set refererToFutureEditPage = path('redirect-to-translation', { entityName: translationEntityClassName, parentId: current_entity.id, languageId: translation.translation.language.id})|url_encode %}
-                            {% set action_new_href = path('easyadmin', request_parameters|default({})|merge({ action: 'new', entity: translationEntityClassName, id: translation.translation.id, hideMenu: 'true', language_id: translation.translation.language.id, parent_id: current_entity.id, referer: refererToFutureEditPage })) %}
+                            {% set refererToFutureEditPage = path('redirect-to-translation', { entityName: translationEntityClassName, parentId: current_entity.id, languageId: translation.translation.language.id, action: 'new' })|url_encode %}
+                            {% set action_new_href = path('easyadmin', request_parameters|default({})|merge({ action: 'new', entity: translationEntityClassName, hideMenu: 'true', language_id: translation.translation.language.id, parent_id: current_entity.id, referer: refererToFutureEditPage })) %}
                             <a class="translation_action new" href="{{ action_new_href }}" language="{{ translation.translation.language.isoKey }}">
                                 <img src="{{ asset('bundles/easyadmintranslations/images/icon_new.png') }}" alt="{{ 'New'|trans }}" />
                             </a>
@@ -59,8 +60,17 @@
 
         {# DOM Templates use in javascript #}
         <div id="eatb_templates" style="display: none;">
+
+            {# Icons #}
             <img template-name="icon_edit" src="{{ asset('bundles/easyadmintranslations/images/icon_edit.png') }}" alt="{{ 'Edit'|trans }}" />
             <img template-name="icon_new" src="{{ asset('bundles/easyadmintranslations/images/icon_new.png') }}" alt="{{ 'New'|trans }}" />
+
+            {# Delete translation referers #}
+            {% for translation in translations %}
+                {% set refererToCloseTab = path('eatb-close-tab', request_parameters|default({})|merge({'entityName': translationEntityClassName, 'parentId' : current_entity.id, 'languageId': translation.translation.language.id, 'hideMenu': 'true'})) %}
+                <a template-name="delete-link" class="{{ translation.translation.language.isoKey }}" href="{{ refererToCloseTab }}"></a>
+            {% endfor %}
+
         </div>
 
     </div>
@@ -111,7 +121,7 @@
                 var $closeTabButton = $('<span>').addClass('close-button');
                 $newTabHeader.append($closeTabButton);
                 $('div.field-eatb_translations_tabs .tab-headers').append($newTabHeader);
-                var $iframe = $('<iframe>').attr('src', $(this).attr('href'));
+                var $iframe = $('<iframe>').attr('name', isoKeyLanguage).attr('src', $(this).attr('href'));
                 var $newTabContent = $('<div>').addClass('tab-content').addClass(isoKeyLanguage).html($iframe);
                 $iframe.on('load', function(){
 
@@ -155,9 +165,15 @@
              * Close tab system
              * Note: Sorry to attach this event on body but I can't figure out an another solution which will work for every future user of this bundle
              */
-            $('body').on('click', '.field-eatb_translations_tabs .tab-header .close-button', function(e){
+            $('body').on('click', '.field-eatb_translations_tabs .tab-header .close-button', function(e, forceClose){
                 e.stopPropagation();
                 var $closeButton = $(this);
+
+                // If force close is true, do not ask for user permission
+                if(forceClose) {
+                    closeTab($closeButton);
+                    return;
+                }
 
                 // Create modal from a clone of easyadmin modal-delete
                 var modalCloseTab = $('#modal-delete').clone().removeAttr('id').addClass('close-tab-modal');
@@ -166,28 +182,33 @@
 
                 // Open modal & close tab if user confirm it
                 modalCloseTab.modal({ backdrop: true, keyboard: true }).on('click', '.close-tab', function () {
-
-                    // Get iso key for tab to close
-                    var isoKeyLanguage = $closeButton.parents('.tab-header').attr('language');
-
-                    // Remove tab header & remove tab content
-                    var wasCurrentTab = $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).hasClass('current');
-                    $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).remove();
-                    $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).remove();
-
-                    // Select another tab if this was the current selected tab
-                    if(wasCurrentTab === true) {
-                        $('div.field-eatb_translations_tabs .tab-headers .tab-header').eq(0).trigger('click');
-                    }
-
-                    // Hide or not component if there is no tab to display
-                    if($('div.field-eatb_translations_tabs .tab-headers .tab-header').length === 0) {
-                        $('div.field-eatb_translations_tabs').addClass('no-tabs');
-                    }
-
+                    closeTab($closeButton);
                 });
 
             });
+
+            /**
+             * Close tab action (private)
+             */
+            function closeTab($closeButton) {
+                // Get iso key for tab to close
+                var isoKeyLanguage = $closeButton.parents('.tab-header').attr('language');
+
+                // Remove tab header & remove tab content
+                var wasCurrentTab = $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).hasClass('current');
+                $('div.field-eatb_translations_tabs .tab-headers .tab-header.' + isoKeyLanguage).remove();
+                $('div.field-eatb_translations_tabs .tab-contents .tab-content.' + isoKeyLanguage).remove();
+
+                // Select another tab if this was the current selected tab
+                if(wasCurrentTab === true) {
+                    $('div.field-eatb_translations_tabs .tab-headers .tab-header').eq(0).trigger('click');
+                }
+
+                // Hide or not component if there is no tab to display
+                if($('div.field-eatb_translations_tabs .tab-headers .tab-header').length === 0) {
+                    $('div.field-eatb_translations_tabs').addClass('no-tabs');
+                }
+            }
 
             /**
              * Open languages base on url param
@@ -207,6 +228,11 @@
                 // Get event which has been receive from iframe
                 var event = e.originalEvent.data;
 
+                // Only for your event
+                if(!event || typeof event.action == 'undefined') {
+                    return;
+                }
+
                 // Action handler
                 switch(event.action) {
 
@@ -214,7 +240,7 @@
                     case 'new':
 
                         // Action link for language
-                        var $actionLink = $('.field-eatb_translations_component .translation_action[language' + event.language + ']');
+                        var $actionLink = $('.field-eatb_translations_component .translation_action[language=' + event.language + ']');
 
                         // Edit action image
                         var $editIcon = $('#eatb_templates img[template-name=icon_edit]').clone();
@@ -226,6 +252,22 @@
 
                     // A translation has been deleted
                     case 'delete':
+
+                        // Action link for language
+                        var $actionLink = $('.field-eatb_translations_component .translation_action[language=' + event.language + ']');
+
+                        // New action image
+                        var $newIcon = $('#eatb_templates img[template-name=icon_new]').clone();
+
+                        // Change action link folr this language
+                        $actionLink.html($newIcon).removeClass('edit').addClass('new').attr('href', decodeURIComponent(event.action_url));
+
+                        // Close corresponding tab in 2 seconds
+                        setTimeout(function(){
+                            var forceClose = true;
+                            $('.field-eatb_translations_tabs .tab-header.' + event.language + ' .close-button').trigger('click', [forceClose]);
+                        }, 2000);
+
                         break;
 
                     default: return;

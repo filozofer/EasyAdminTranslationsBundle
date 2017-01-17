@@ -10,12 +10,22 @@
     // Verify if we are in iframe on a new or edit page
     if(weAreInIframe && weAreInEditPage) {
 
-        // Build action url
-        var actionUrl = (window.location.href.indexOf('&referer=') === -1 || window.location.href.indexOf('?referer=') === -1) ? window.location.href + '&referer=REPLACETHIS&updated_referer' : window.location.href;
-        var actionUrl = actionUrl.replace(new RegExp('(.*referer=)(.*)(&.*)'), '$1' + encodeURIComponent(window.location.href) + '$3');
+        // Build edit url
+        var actionUrl = (window.location.href.indexOf('&referer=') !== -1 || window.location.href.indexOf('?referer=') !== -1) ? window.location.href : window.location.href + '&referer=REPLACETHIS&updated_referer';
+        actionUrl = actionUrl.replace(new RegExp('(.*referer=)(.*)(&.*)'), '$1' + encodeURIComponent(window.location.href) + '$3');
 
-        // Update form action attribute to redirect to edit after form submit
+        // Update edit form action attribute to redirect to edit after form submit
         $('form[name=' + $_GET('entity').toLowerCase() + '][data-view=' + $_GET('action') + '][data-entity]').attr('action', actionUrl);
+
+        // Build delete url
+        var actualDeleteUrl = $('#form-actions-row .action-delete').attr('href');
+        var newRefererUrl = $('a[template-name=delete-link].' + window.name , window.parent.document).attr('href');
+        actualDeleteUrl = (actualDeleteUrl.indexOf('&referer=') !== -1 || actualDeleteUrl.indexOf('?referer=') !== -1) ? actualDeleteUrl : actualDeleteUrl + '&referer=REPLACETHIS&updated_referer';
+        newDeleteUrl = actualDeleteUrl.replace(new RegExp('(.*referer=)([^&]+)(.*)'), '$1' + encodeURIComponent(newRefererUrl) + '$3');
+
+        // Update delete form action attribute to redirect to close tab page after submit
+        $('#form-actions-row .action-delete').attr('href', newDeleteUrl);
+        $('form[name=delete_form]').attr('action', newDeleteUrl);
 
     }
 
