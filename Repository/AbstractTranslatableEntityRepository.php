@@ -11,41 +11,50 @@ use Doctrine\ORM\EntityRepository;
 abstract class AbstractTranslatableEntityRepository extends EntityRepository
 {
     /**
-     * @param int $limit
-     * @param int $offset
+     * Find item for current language
+     * @param int $number
+     * @param int $page
      * @return array
      */
-    public function findForCurrentLanguage($limit = null, $offset = null)
+    public function findForCurrentLanguage($number = null, $page = 1)
     {
-        $queryBuilder = $this->getQueryBuilderForCurrentLanguage($limit, $offset);
+        // Build query base on number of needed items and page number
+        $queryBuilder = $this->getQueryBuilderForCurrentLanguage($number, $page);
 
+        // Call database and return result
         return $queryBuilder->getQuery()->getResult();
     }
 
     /**
-     * @param int $limit
+     * Find X random item(s) for current language
+     * @param int $number
      * @return array
      */
-    public function findRandomForCurrentLanguage($limit = null)
+    public function findRandomForCurrentLanguage($number = null)
     {
-        $queryBuilder = $this->getQueryBuilderForCurrentLanguage($limit);
+        // Get query base on number of needed items and language
+        $queryBuilder = $this->getQueryBuilderForCurrentLanguage($number);
 
+        // Order items by rand in the query
         $queryBuilder->orderBy('rand()');
 
+        // Call database and return result
         return $queryBuilder->getQuery()->getResult();
     }
 
     /**
      * Create query builder and include language request parameter for current language
      *
-     * @param int $limit Optional parameter to set the maximum number of results to retrieve
-     * @param int $offset Optional parameter to sets the position of the first result to retrieve
+     * @param int $number Optional parameter to set the maximum number of results to retrieve
+     * @param int $page Optional parameter to sets the position of the first result to retrieve
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function getQueryBuilderForCurrentLanguage($limit = null, $offset = null)
+    private function getQueryBuilderForCurrentLanguage($number = -1, $page = 1)
     {
+        // Get global language set by user
         global $defaultTranslationLanguage;
 
+        // Build query to filter by language
         $queryBuilder = $this->createQueryBuilder('e');
         $queryBuilder
             ->join('e.translations', 'et')
@@ -53,14 +62,15 @@ abstract class AbstractTranslatableEntityRepository extends EntityRepository
             ->setParameter('language', $defaultTranslationLanguage)
         ;
 
-        if ($limit !== null) {
-            $queryBuilder->setMaxResults($limit);
+        // Set max result if set
+        if ($number !== -1) {
+            $queryBuilder->setMaxResults($number);
         }
 
-        if ($offset !== null) {
-            $queryBuilder->setFirstResult($offset);
-        }
+        // Handle pagination
+        $queryBuilder->setFirstResult(($page - 1) * $number);
 
+        // Return query builder
         return $queryBuilder;
     }
 }
