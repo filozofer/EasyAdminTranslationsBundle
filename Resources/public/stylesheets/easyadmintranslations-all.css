@@ -8,17 +8,20 @@
  */
 
 ul.eatb_field_translations {
+    display: flex;
+    align-items: center;
     margin: 0px;
     list-style-type: none;
     line-height: 29px;
 }
 ul.eatb_field_translations li {
     display: inline-block;
-    width: 20px;
-    height: 15px;
+    width: 30px;
+    height: 20px;
+    margin-bottom: 0px;
     margin-right: 5px;
 }
-ul.eatb_field_translations li img {
+ul.eatb_field_translations li .flag {
     vertical-align: inherit;
 }
 
@@ -32,9 +35,16 @@ ul.eatb_field_translations li img {
 .eatb_translations_component_widget .label_language_column .language_title {
     margin-right: 7px;
 }
-.eatb_translations_component_widget .label_language_column .flag {
+.eatb_translations_component_widget .label_language_column .flag, .field-eatb_translations_tabs .flag, .eatb_field_translations .flag {
     float: right;
+    width: 30px;
+    height: 20px;
+    background-size: cover;
 }
+.eatb_field_translations .flag {
+    margin-right: 10px;
+}
+
 .eatb_translations_component_widget .actions_column {
     text-align: center;
 }

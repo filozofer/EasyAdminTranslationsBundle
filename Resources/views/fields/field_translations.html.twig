@@ -13,7 +13,7 @@
                 <li class="{{ translation.language.isoKey }}">
                     {% set action_edit_href = path('easyadmin', request_parameters|default({})|merge({ action: 'edit', entity: field_options.sourceEntity|split('\\')|last, id: translation.parent.id, translation: translation.language.isoKey })) %}
                     <a href="{{ action_edit_href }}">
-                        <img src="{{ vich_uploader_asset(translation.language, 'flagFile') }}" alt="{{ translation.language.title }}" />
+                        <div class="flag" style="background-image: url('{{ vich_uploader_asset(translation.language, 'flagFile') }}');" title="{{ translation.language.title }}"></div>
                     </a>
                 </li>
 

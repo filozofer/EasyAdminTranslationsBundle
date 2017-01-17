@@ -31,7 +31,7 @@
                 <tr>
                     <td class="label_language_column">
                         <span class="language_title">{{ translation.language.title }}</span>
-                        <img class="flag" src="{{ vich_uploader_asset(translation.language, 'flagFile') }}" alt="{{ translation.language.title }}" />
+                        <div class="flag" style="background-image: url('{{ vich_uploader_asset(translation.language, 'flagFile') }}');" title="{{ translation.language.title }}"></div>
                     </td>
                     <td class="actions_column">
                         {# Translation exist ? #}
