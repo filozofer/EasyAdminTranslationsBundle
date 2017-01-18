@@ -2,6 +2,7 @@
 # Entity Language
 entity.language:
     label: Langage
+    list: Liste des langages
     isoKey: Clé iso
     flag: Drapeau
     defaultTranslationLanguage: Langage par défaut

@@ -20,7 +20,7 @@ abstract class Translation extends Translatable
      * @var Language
      *
      * @ORM\ManyToOne(targetEntity="EasyAdminTranslationsBundle\Entity\Language")
-     * @ORM\JoinColumn(name="language_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="language_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $language;
 
