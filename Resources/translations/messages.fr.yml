@@ -6,3 +6,6 @@ entity.language:
     isoKey: Clé iso
     flag: Drapeau
     defaultTranslationLanguage: Langage par défaut
+
+entity.generic.translations: Traductions
+entity.generic.technical_title: Titre technique

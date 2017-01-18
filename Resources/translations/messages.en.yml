@@ -6,3 +6,6 @@ entity.language:
     isoKey: Iso key
     flag: Flag
     defaultTranslationLanguage: Default language
+
+entity.generic.translations: Translations
+entity.generic.technical_title: Technical title
