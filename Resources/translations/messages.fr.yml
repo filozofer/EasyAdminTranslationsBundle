@@ -1,0 +1,7 @@
+
+# Entity Language
+entity.language:
+    label: Langage
+    isoKey: Clé iso
+    flag: Drapeau
+    defaultTranslationLanguage: Langage par défaut
