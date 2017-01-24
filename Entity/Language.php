@@ -3,10 +3,13 @@
 namespace EasyAdminTranslationsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Question
@@ -14,6 +17,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Table(name="language")
  * @ORM\Entity(repositoryClass="EasyAdminTranslationsBundle\Repository\LanguageRepository")
  * @Vich\Uploadable
+ * @ExclusionPolicy("all")
  */
 class Language extends Translatable
 {
@@ -26,6 +30,7 @@ class Language extends Translatable
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
@@ -33,6 +38,7 @@ class Language extends Translatable
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Expose
      */
     protected $title;
 
@@ -40,6 +46,7 @@ class Language extends Translatable
      * @var string
      *
      * @ORM\Column(name="iso_key", type="string", length=255)
+     * @Expose
      */
     protected $isoKey;
 
@@ -47,6 +54,7 @@ class Language extends Translatable
      * Is this Language is the default translation language return by web service ?
      * @var boolean
      * @ORM\Column(name="default_translation_language", type="boolean", nullable=true)
+     * @Expose
      */
     protected $defaultTranslationLanguage;
 
@@ -62,6 +70,7 @@ class Language extends Translatable
      * @var string
      *
      * @ORM\Column(name="flag", type="string", length=255, nullable=true )
+     * @Expose
      */
     protected $flag;
 

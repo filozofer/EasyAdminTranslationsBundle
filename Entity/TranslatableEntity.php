@@ -3,6 +3,7 @@
 namespace EasyAdminTranslationsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use JsonSerializable;
 
 /**
@@ -27,6 +28,7 @@ abstract class TranslatableEntity extends Translatable implements JsonSerializab
     /**
      * Property to override in child object if you use annotation on this property
      * @var mixed $translations
+     * @Serializer\Exclude()
      */
     protected $translations;
 
