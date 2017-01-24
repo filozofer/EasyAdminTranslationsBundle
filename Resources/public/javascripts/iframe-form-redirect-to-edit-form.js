@@ -11,7 +11,7 @@
     if(weAreInIframe && weAreInEditPage) {
 
         // Build edit url
-        var actionUrl = (window.location.href.indexOf('&referer=') !== -1 || window.location.href.indexOf('?referer=') !== -1) ? window.location.href : window.location.href + '&referer=REPLACETHIS&updated_referer';
+        var actionUrl = (window.location.href.indexOf('&referer=') !== -1 || window.location.href.indexOf('?referer=') !== -1) ? window.location.href + '&updated_referer' : window.location.href + '&referer=REPLACETHIS&updated_referer';
         actionUrl = actionUrl.replace(new RegExp('(.*referer=)(.*)(&.*)'), '$1' + encodeURIComponent(window.location.href) + '$3');
 
         // Update edit form action attribute to redirect to edit after form submit

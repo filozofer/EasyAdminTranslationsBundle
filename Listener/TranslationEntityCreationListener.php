@@ -58,6 +58,11 @@ class TranslationEntityCreationListener implements EventSubscriberInterface
         $config = $event->getArgument('config');
         $request = $event->getArgument('request');
 
+        // Quit early if form is already submitted
+        if($form->isSubmitted()) {
+            return;
+        }
+
         // Get translation class name
         $translationClassName = join('', array_slice(explode('\\', get_class($translation)), -1));
 
