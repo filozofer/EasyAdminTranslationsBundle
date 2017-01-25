@@ -25,6 +25,11 @@ ul.eatb_field_translations li .flag {
     vertical-align: inherit;
 }
 
+.eatb_field_language_flag {
+    width: 30px;
+    height: 20px;
+}
+
 /**
  * Translation widget component
  */
