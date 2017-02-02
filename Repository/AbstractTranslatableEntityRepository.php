@@ -16,7 +16,7 @@ abstract class AbstractTranslatableEntityRepository extends EntityRepository
      * @param int $page
      * @return array
      */
-    public function findForCurrentLanguage($number = null, $page = 1)
+    public function findForCurrentLanguage($number = -1, $page = 1)
     {
         // Build query base on number of needed items and page number
         $queryBuilder = $this->getQueryBuilderForCurrentLanguage($number, $page);
@@ -26,11 +26,21 @@ abstract class AbstractTranslatableEntityRepository extends EntityRepository
     }
 
     /**
+     * Find all items for current language
+     * @return array
+     */
+    public function findAllForCurrentLanguage()
+    {
+        // Call findForCurrentLanguage with default parameters (no pagination limit)
+        return $this->findForCurrentLanguage();
+    }
+
+    /**
      * Find X random item(s) for current language
      * @param int $number
      * @return array
      */
-    public function findRandomForCurrentLanguage($number = null)
+    public function findRandomForCurrentLanguage($number = -1)
     {
         // Get query base on number of needed items and language
         $queryBuilder = $this->getQueryBuilderForCurrentLanguage($number);
