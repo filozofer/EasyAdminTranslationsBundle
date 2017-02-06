@@ -35,12 +35,14 @@ abstract class TranslatableEntity extends Translatable implements JsonSerializab
     /**
      * Do we need to translate this entity while Json encoding her ?
      * @var boolean $translate Default value = true
+     * @Serializer\Exclude()
      */
     protected $translate;
 
     /**
      * Set this param to the wanted language before translation
      * @var Language $translationLanguage
+     * @Serializer\Exclude()
      */
     protected $translationLanguage;
 
@@ -156,7 +158,14 @@ abstract class TranslatableEntity extends Translatable implements JsonSerializab
      */
     public function getTranslations()
     {
-        return $this->translations;
+        $translations = [];
+        foreach ($this->translations as $translation) {
+            $translations[] = $translation;
+        }
+        usort($translations, function($a, $b){
+            return strcmp($a->getLanguage()->getIsoKey(), $b->getLanguage()->getIsoKey());
+        });
+        return $translations;
     }
 
     /**
