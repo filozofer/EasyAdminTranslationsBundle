@@ -4,11 +4,18 @@
 services:
 
     easyadmintranslations.translations_component_type:
-        class: EasyAdminTranslationsBundle\Form\TranslationsComponentType
+        class: EasyAdminTranslationsBundle\Form\Type\TranslationsComponentType
         arguments:
             em: "@doctrine.orm.entity_manager"
         tags:
             - { name: form.type, alias: eatb_translations_component }
+
+    easyadmintranslations.hidden_entity_relation:
+        class: EasyAdminTranslationsBundle\Form\Type\HiddenEntityRelationType
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: form.type, alias: hidden_entity_relation }
 
     easyadmintranslations.flash_message_listerner:
         class: EasyAdminTranslationsBundle\Listener\FlashMessageListener
