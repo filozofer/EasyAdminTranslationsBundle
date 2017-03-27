@@ -161,6 +161,12 @@ class TranslationEntityCreationListener implements EventSubscriberInterface
 
         }
 
+        // Verify if parent already have a translation for this language and remove it if t's the case
+	    $translationForLanguage = $translation->getParent()->getTranslation($translation->getLanguage());
+	    if(!is_null($translationForLanguage->getId()) && $translation->getId() !== $translationForLanguage->getId()) {
+	    	$this->em->remove($translationForLanguage);
+	    }
+
     }
 
 }
